@@ -34,6 +34,8 @@ public class NetworkUtils {
 
     public static void loadMovies(Context context){
 
+        Log.d("TAG","Started loading movies");
+
         String URLToUse = null;
 
         if(searchByPopularity){URLToUse = POPULAR_BASE_URL;}

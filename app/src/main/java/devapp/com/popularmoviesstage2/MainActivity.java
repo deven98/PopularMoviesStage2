@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
     void initialize(){
 
         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            ROWS_TO_DISPLAY = 3;
+            ROWS_TO_DISPLAY = 2;
         }
         else{ROWS_TO_DISPLAY = 4;}
 
@@ -80,6 +81,10 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
             protected void onStartLoading() {
                 super.onStartLoading();
                 progressBar.setVisibility(View.VISIBLE);
+
+                Toast.makeText(MainActivity.this, "Started Loading", Toast.LENGTH_SHORT).show();
+
+                forceLoad();
             }
 
             @Override
