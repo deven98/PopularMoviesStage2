@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -33,6 +36,35 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
     int ROWS_TO_DISPLAY = 2;
 
     public static final int MOVIE_LOADER_ID = 99;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = new MenuInflater(this);
+
+        menuInflater.inflate(R.menu.display_movies_menu,menu);
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Boolean originalSetting = NetworkUtils.searchByPopularity;
+
+        if(item.getItemId() == R.id.menu_search_by_popularity){
+            NetworkUtils.searchByPopularity = true;
+        }else{
+            NetworkUtils.searchByPopularity = false;
+        }
+
+        if(originalSetting != NetworkUtils.searchByPopularity){
+            getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID,null,this);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     void initialize(){
 
@@ -90,12 +122,21 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
             @Override
             public Void loadInBackground() {
 
+                NetworkUtils.clearData();
+
                 NetworkUtils.loadMovies(MainActivity.this);
 
                 return null;
 
             }
 
+            @Override
+            protected void onStopLoading() {
+                super.onStopLoading();
+
+                progressBar.setVisibility(View.INVISIBLE);
+
+            }
         };
 
     }

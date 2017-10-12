@@ -16,10 +16,6 @@ import java.util.Scanner;
 
 import devapp.com.popularmoviesstage2.MainActivity;
 
-/**
- * Created by HP on 10-10-2017.
- */
-
 public class NetworkUtils {
 
     private static String API_KEY = "7ed6c9e0c8221f0764db55ce52e1cfda";
@@ -31,6 +27,16 @@ public class NetworkUtils {
     private static String IMAGE_BASE_URL =  "http://image.tmdb.org/t/p/w185/";
 
     public static boolean searchByPopularity = true;
+
+    public static void clearData(){
+
+        MainActivity.movieDescription.clear();
+        MainActivity.movieNames.clear();
+        MainActivity.moviePosterLinks.clear();
+        MainActivity.movieRating.clear();
+        MainActivity.movieReleaseDate.clear();
+
+    }
 
     public static void loadMovies(Context context){
 
