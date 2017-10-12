@@ -3,4 +3,6 @@
     <string name="description_movie_name">Movie Name</string>
     <string name="search_by_popularity">Search by Popularity</string>
     <string name="search_by_rating">Search by Rating</string>
+    <string name="message_mark_favourite">MARK AS FAVOURITE</string>
+    <string name="content_poster">Movie Poster</string>
 </resources>

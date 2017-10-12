@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
     public void onItemClick(int position) {
 
         Intent in = new Intent(this,DetailActivity.class);
-        in.putExtra("Position",position);
+        in.putExtra("position",position);
         startActivity(in);
 
     }
