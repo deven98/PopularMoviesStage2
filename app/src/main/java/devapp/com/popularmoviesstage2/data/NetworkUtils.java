@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import devapp.com.popularmoviesstage2.DetailActivity;
 import devapp.com.popularmoviesstage2.MainActivity;
 
 public class NetworkUtils {
@@ -25,6 +27,11 @@ public class NetworkUtils {
     private static String RATING_BASE_URL= "http://api.themoviedb.org/3/movie/top_rated?api_key="+API_KEY;
 
     private static String IMAGE_BASE_URL =  "http://image.tmdb.org/t/p/w185/";
+
+    private static String ID_CHOSEN = "";
+
+    //Add ID retrieved from API to create the complete URL;
+    private static String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v";
 
     public static boolean searchByPopularity = true;
 
@@ -85,6 +92,9 @@ public class NetworkUtils {
                 String rating = movie.getString("vote_average");
                 MainActivity.movieRating.add(rating);
 
+                String id = movie.getString("id");
+                MainActivity.movieId.add(id);
+
                 Log.d("pos",posterLink);
 
                 Log.d("res", title);
@@ -96,6 +106,47 @@ public class NetworkUtils {
 
         }
         return null;
+
+    }
+
+    public static void getTrailers(){
+
+        DetailActivity.trailerIDs.clear();
+
+        ID_CHOSEN = MainActivity.movieId.get(DetailActivity.POSITION_CHOSEN);
+
+        String TRAILER_BASE_URL = "http://api.themoviedb.org/3/movie/" + ID_CHOSEN + "/videos?api_key=" + API_KEY;
+
+        Uri uri = Uri.parse(TRAILER_BASE_URL).buildUpon().build();
+
+        String result = null;
+
+        try{
+            result = getResponseFromHttpUrl(new URL(uri.toString()));}
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        parseTrailers(result);
+
+    }
+
+    private static void parseTrailers(String result){
+
+        try {
+            JSONObject j = new JSONObject(result);
+
+            JSONArray trailers = j.getJSONArray("results");
+
+            for(int i = 0; i<trailers.length()-1; i++){
+
+                DetailActivity.trailerIDs.add(trailers.getJSONObject(i).getString("key"));
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 

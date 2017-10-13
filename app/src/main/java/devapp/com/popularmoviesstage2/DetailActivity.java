@@ -9,9 +9,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static int POSITION_CHOSEN = 0;
+
+    public static ArrayList<String> trailerIDs = new ArrayList<>();
 
     ImageView posterImageView;
     TextView titleTextView;

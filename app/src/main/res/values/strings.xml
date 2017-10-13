@@ -5,4 +5,5 @@
     <string name="search_by_rating">Search by Rating</string>
     <string name="message_mark_favourite">MARK AS FAVOURITE</string>
     <string name="content_poster">Movie Poster</string>
+    <string name="message_trailers">Trailers</string>
 </resources>

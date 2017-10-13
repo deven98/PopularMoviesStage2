@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
     public static ArrayList<String> movieDescription = new ArrayList<>();
     public static ArrayList<String> movieRating = new ArrayList<>();
     public static ArrayList<String> movieReleaseDate = new ArrayList<>();
+    public static ArrayList<String> movieId = new ArrayList<>();
 
     RecyclerView displayMoviesRecyclerView;
     GridLayoutManager gridLayoutManager;
