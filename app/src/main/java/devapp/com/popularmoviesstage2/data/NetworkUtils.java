@@ -31,7 +31,7 @@ public class NetworkUtils {
     private static String ID_CHOSEN = "";
 
     //Add ID retrieved from API to create the complete URL;
-    private static String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v";
+    public static String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
 
     public static boolean searchByPopularity = true;
 
@@ -42,6 +42,7 @@ public class NetworkUtils {
         MainActivity.moviePosterLinks.clear();
         MainActivity.movieRating.clear();
         MainActivity.movieReleaseDate.clear();
+        MainActivity.movieId.clear();
 
     }
 
@@ -147,6 +148,8 @@ public class NetworkUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
 
     }
 
