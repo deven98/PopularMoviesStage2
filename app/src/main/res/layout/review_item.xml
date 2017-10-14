@@ -14,5 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#009688"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp"/>
         <!-- android:background="@drawable/back"/> -->
 </LinearLayout>

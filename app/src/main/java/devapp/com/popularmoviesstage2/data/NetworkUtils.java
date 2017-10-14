@@ -22,7 +22,8 @@ import devapp.com.popularmoviesstage2.MainActivity;
 
 public class NetworkUtils {
 
-    private static String API_KEY = "7ed6c9e0c8221f0764db55ce52e1cfda";
+    //TODO:ADD API KEY HERE
+    private static String API_KEY = "";
 
     private static String POPULAR_BASE_URL = "http://api.themoviedb.org/3/movie/popular?api_key="+API_KEY;
 
@@ -47,6 +48,7 @@ public class NetworkUtils {
         MainActivity.movieRating.clear();
         MainActivity.movieReleaseDate.clear();
         MainActivity.movieId.clear();
+        MainActivity.DBIDs.clear();
 
     }
 
@@ -88,14 +90,17 @@ public class NetworkUtils {
                 MainActivity.moviePosterLinks.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_POSTER_LINK)));
                 MainActivity.movieDescription.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_CONTENT_DESCRIPTION)));
                 MainActivity.movieNames.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_NAME)));
+                MainActivity.DBIDs.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry._ID)));
 
             }while (cursor.moveToNext());
+
+            cursor.close();
 
         }
 
     }
 
-    public static ArrayList<String> JSONSeperator(Context c, String s){
+    private static ArrayList<String> JSONSeperator(Context c, String s){
 
         try {
 
@@ -125,9 +130,6 @@ public class NetworkUtils {
                 String id = movie.getString("id");
                 MainActivity.movieId.add(id);
 
-                Log.d("pos",posterLink);
-
-                Log.d("res", title);
             }
 
         }catch (Exception e){

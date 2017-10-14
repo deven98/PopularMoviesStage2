@@ -9,4 +9,6 @@
     <string name="adapter_trailer">Trailer </string>
     <string name="message_reviews">Reviews</string>
     <string name="menu_favourites">Favourites</string>
+    <string name="display_remove_favourites">Remove from Favourites</string>
+    <string name="total_rating">/10</string>
 </resources>

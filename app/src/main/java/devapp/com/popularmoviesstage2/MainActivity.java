@@ -28,10 +28,11 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
     public static ArrayList<String> movieRating = new ArrayList<>();
     public static ArrayList<String> movieReleaseDate = new ArrayList<>();
     public static ArrayList<String> movieId = new ArrayList<>();
+    public static ArrayList<String> DBIDs = new ArrayList<>();
 
     RecyclerView displayMoviesRecyclerView;
     GridLayoutManager gridLayoutManager;
-    DisplayMoviesAdapter displayMoviesAdapter;
+    public static DisplayMoviesAdapter displayMoviesAdapter;
     ProgressBar progressBar;
 
     int ROWS_TO_DISPLAY = 2;
@@ -47,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
 
         return super.onCreateOptionsMenu(menu);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -108,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
 
     }
 
+
     @Override
     public Loader<Void> onCreateLoader(int id, Bundle args) {
 
@@ -116,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
             @Override
             protected void onStartLoading() {
                 super.onStartLoading();
+
                 progressBar.setVisibility(View.VISIBLE);
 
                 forceLoad();
@@ -123,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
 
             @Override
             public Void loadInBackground() {
+
 
                 NetworkUtils.clearData();
 

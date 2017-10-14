@@ -10,12 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -36,7 +34,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     ImageView posterImageView;
     TextView titleTextView;
     TextView ratingTextView;
-    TextView timeTextView;
     TextView yearTextView;
     TextView descriptionTextView;
 
@@ -55,11 +52,14 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         posterImageView = (ImageView) findViewById(R.id.detail_poster_image_view);
         titleTextView = (TextView) findViewById(R.id.detail_title_text_view);
         ratingTextView = (TextView) findViewById(R.id.detail_rating_text_view);
-        timeTextView = (TextView) findViewById(R.id.detail_time_text_view);
         yearTextView = (TextView) findViewById(R.id.detail_year_text_view);
         descriptionTextView = (TextView) findViewById(R.id.detail_description_text_view);
 
         favouriteButton = (Button) findViewById(R.id.detail_favourite_button);
+
+        if(NetworkUtils.displayFavourites){
+            favouriteButton.setText(getString(R.string.display_remove_favourites));
+        }
 
         trailerRecyclerView = (RecyclerView) findViewById(R.id.detail_trailer_recycler_view);
         trailerLinearLayoutManager = new LinearLayoutManager(this);
@@ -89,7 +89,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
         Picasso.with(this).load(MainActivity.moviePosterLinks.get(POSITION_CHOSEN)).into(posterImageView);
         titleTextView.setText(MainActivity.movieNames.get(POSITION_CHOSEN));
-        ratingTextView.setText(MainActivity.movieRating.get(POSITION_CHOSEN));
+        ratingTextView.setText(MainActivity.movieRating.get(POSITION_CHOSEN) + getString(R.string.total_rating) + "");
         yearTextView.setText(MainActivity.movieReleaseDate.get(POSITION_CHOSEN));
         descriptionTextView.setText(MainActivity.movieDescription.get(POSITION_CHOSEN));
 
@@ -101,27 +101,38 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onClick(View v) {
 
-                ContentValues contentValues = new ContentValues();
+                if(!NetworkUtils.displayFavourites) {
+                    ContentValues contentValues = new ContentValues();
 
-                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_NAME,MainActivity.movieNames.get(POSITION_CHOSEN));
-                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_POSTER_LINK, MainActivity.moviePosterLinks.get(POSITION_CHOSEN));
-                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_RELEASE_DATE, MainActivity.movieReleaseDate.get(POSITION_CHOSEN));
-                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_CONTENT_DESCRIPTION, MainActivity.movieDescription.get(POSITION_CHOSEN));
-                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_RATING, MainActivity.movieRating.get(POSITION_CHOSEN));
-                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_ID,MainActivity.movieId.get(POSITION_CHOSEN));
+                    contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_NAME, MainActivity.movieNames.get(POSITION_CHOSEN));
+                    contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_POSTER_LINK, MainActivity.moviePosterLinks.get(POSITION_CHOSEN));
+                    contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_RELEASE_DATE, MainActivity.movieReleaseDate.get(POSITION_CHOSEN));
+                    contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_CONTENT_DESCRIPTION, MainActivity.movieDescription.get(POSITION_CHOSEN));
+                    contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_RATING, MainActivity.movieRating.get(POSITION_CHOSEN));
+                    contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_ID, MainActivity.movieId.get(POSITION_CHOSEN));
 
-                Uri uri = getContentResolver().insert(FavouritesContract.FavouritesEntry.CONTENT_URI, contentValues);
+                    getContentResolver().insert(FavouritesContract.FavouritesEntry.CONTENT_URI, contentValues);
 
-                if(uri != null) {
-                    Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+                    finish();
+                }else{
+
+                    Uri uri = FavouritesContract.FavouritesEntry.CONTENT_URI;
+                    uri = uri.buildUpon().appendPath(MainActivity.DBIDs.get(POSITION_CHOSEN)).build();
+
+                    getContentResolver().delete(uri,null,null);
+
+                    MainActivity.displayMoviesAdapter.notifyDataSetChanged();
+
+                    finish();
+
                 }
-
-                finish();
 
             }
         });
 
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,9 +172,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
                 NetworkUtils.getTrailers();
                 NetworkUtils.getReviews();
-
-                Log.d("length",String.valueOf(reviews.size()));
-                Log.d("length",String.valueOf(reviewAdapter.getItemCount()));
 
                 return null;
             }
