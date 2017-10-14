@@ -56,13 +56,16 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
 
         if(item.getItemId() == R.id.menu_search_by_popularity){
             NetworkUtils.searchByPopularity = true;
-        }else{
+            NetworkUtils.displayFavourites = false;
+        }else if (item.getItemId() == R.id.menu_search_by_rating){
             NetworkUtils.searchByPopularity = false;
+            NetworkUtils.displayFavourites = false;
+        }else if(item.getItemId() == R.id.menu_display_favourites){
+            NetworkUtils.searchByPopularity = false;
+            NetworkUtils.displayFavourites = true;
         }
 
-        if(originalSetting != NetworkUtils.searchByPopularity){
             getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID,null,this);
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -123,7 +126,13 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
 
                 NetworkUtils.clearData();
 
-                NetworkUtils.loadMovies(MainActivity.this);
+                if(!NetworkUtils.displayFavourites) {
+                    NetworkUtils.loadMovies(MainActivity.this);
+                }
+
+                if(NetworkUtils.displayFavourites){
+                    NetworkUtils.loadFavourites(MainActivity.this);
+                }
 
                 return null;
 

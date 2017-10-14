@@ -1,6 +1,7 @@
 package devapp.com.popularmoviesstage2.data;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -36,6 +37,8 @@ public class NetworkUtils {
 
     public static boolean searchByPopularity = true;
 
+    public static boolean displayFavourites = false;
+
     public static void clearData(){
 
         MainActivity.movieDescription.clear();
@@ -64,6 +67,31 @@ public class NetworkUtils {
             e.printStackTrace();
         }
         JSONSeperator(context,s);
+
+    }
+
+    public static void loadFavourites(Context context){
+
+        Uri uri = FavouritesContract.BASE_CONTENT_URI;
+
+        uri = uri.buildUpon().appendPath(FavouritesContract.PATH_FAVOURITES).build();
+
+        Cursor cursor = context.getContentResolver().query(uri,null,null,null,null);
+
+        if(cursor.moveToFirst()){
+
+            do{
+
+                MainActivity.movieId.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_ID)));
+                MainActivity.movieReleaseDate.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_RELEASE_DATE)));
+                MainActivity.movieRating.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_RATING)));
+                MainActivity.moviePosterLinks.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_POSTER_LINK)));
+                MainActivity.movieDescription.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_CONTENT_DESCRIPTION)));
+                MainActivity.movieNames.add(cursor.getString(cursor.getColumnIndex(FavouritesContract.FavouritesEntry.MOVIE_NAME)));
+
+            }while (cursor.moveToNext());
+
+        }
 
     }
 
