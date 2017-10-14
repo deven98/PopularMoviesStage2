@@ -115,8 +115,6 @@ public class MainActivity extends AppCompatActivity implements DisplayMoviesAdap
                 super.onStartLoading();
                 progressBar.setVisibility(View.VISIBLE);
 
-                Toast.makeText(MainActivity.this, "Started Loading", Toast.LENGTH_SHORT).show();
-
                 forceLoad();
             }
 
