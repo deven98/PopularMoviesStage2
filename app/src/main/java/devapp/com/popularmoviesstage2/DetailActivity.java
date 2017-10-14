@@ -1,5 +1,6 @@
 package devapp.com.popularmoviesstage2;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
@@ -10,13 +11,17 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import devapp.com.popularmoviesstage2.data.FavouritesContract;
 import devapp.com.popularmoviesstage2.data.NetworkUtils;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Void>{
@@ -43,6 +48,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     ReviewAdapter reviewAdapter;
     LinearLayoutManager reviewLinearLayoutManager;
 
+    Button favouriteButton;
+
     void initialize(){
 
         posterImageView = (ImageView) findViewById(R.id.detail_poster_image_view);
@@ -51,6 +58,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         timeTextView = (TextView) findViewById(R.id.detail_time_text_view);
         yearTextView = (TextView) findViewById(R.id.detail_year_text_view);
         descriptionTextView = (TextView) findViewById(R.id.detail_description_text_view);
+
+        favouriteButton = (Button) findViewById(R.id.detail_favourite_button);
 
         trailerRecyclerView = (RecyclerView) findViewById(R.id.detail_trailer_recycler_view);
         trailerLinearLayoutManager = new LinearLayoutManager(this);
@@ -86,12 +95,41 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     }
 
+    void setOnClickListeners(){
+
+        favouriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_NAME,MainActivity.movieNames.get(POSITION_CHOSEN));
+                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_POSTER_LINK, MainActivity.moviePosterLinks.get(POSITION_CHOSEN));
+                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_RELEASE_DATE, MainActivity.movieReleaseDate.get(POSITION_CHOSEN));
+                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_CONTENT_DESCRIPTION, MainActivity.movieDescription.get(POSITION_CHOSEN));
+                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_RATING, MainActivity.movieRating.get(POSITION_CHOSEN));
+                contentValues.put(FavouritesContract.FavouritesEntry.MOVIE_ID,MainActivity.movieId.get(POSITION_CHOSEN));
+
+                Uri uri = getContentResolver().insert(FavouritesContract.FavouritesEntry.CONTENT_URI, contentValues);
+
+                if(uri != null) {
+                    Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+                }
+
+                finish();
+
+            }
+        });
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         initialize();
+        setOnClickListeners();
 
         Intent in = getIntent();
 

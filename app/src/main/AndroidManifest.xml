@@ -23,6 +23,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+        <provider
+            android:name="devapp.com.popularmoviesstage2.data.PopularMoviesContentProvider"
+            android:authorities="devapp.com.popularmoviesstage2"
+            android:exported="false"/>
     </application>
 
 </manifest>
