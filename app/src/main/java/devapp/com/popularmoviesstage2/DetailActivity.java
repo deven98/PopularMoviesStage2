@@ -2,8 +2,6 @@ package devapp.com.popularmoviesstage2;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -11,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +26,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public static int LOADER_ID = 49;
 
     public static ArrayList<String> trailerIDs = new ArrayList<>();
+    public static ArrayList<String> reviews = new ArrayList<>();
 
     ImageView posterImageView;
     TextView titleTextView;
@@ -36,8 +36,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     TextView descriptionTextView;
 
     RecyclerView trailerRecyclerView;
-    LinearLayoutManager linearLayoutManager;
+    LinearLayoutManager trailerLinearLayoutManager;
     TrailerAdapter trailerAdapter;
+
+    RecyclerView reviewRecyclerView;
+    ReviewAdapter reviewAdapter;
+    LinearLayoutManager reviewLinearLayoutManager;
 
     void initialize(){
 
@@ -49,7 +53,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         descriptionTextView = (TextView) findViewById(R.id.detail_description_text_view);
 
         trailerRecyclerView = (RecyclerView) findViewById(R.id.detail_trailer_recycler_view);
-        linearLayoutManager = new LinearLayoutManager(this);
+        trailerLinearLayoutManager = new LinearLayoutManager(this);
         trailerAdapter = new TrailerAdapter(this, new TrailerAdapter.ItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -60,8 +64,15 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         });
 
         trailerRecyclerView.setNestedScrollingEnabled(false);
-        trailerRecyclerView.setLayoutManager(linearLayoutManager);
+        trailerRecyclerView.setLayoutManager(trailerLinearLayoutManager);
         trailerRecyclerView.setAdapter(trailerAdapter);
+
+        reviewRecyclerView = (RecyclerView) findViewById(R.id.detail_review_recycler_view);
+        reviewRecyclerView.setNestedScrollingEnabled(false);
+        reviewAdapter = new ReviewAdapter(this);
+        reviewRecyclerView.setAdapter(reviewAdapter);
+        reviewLinearLayoutManager = new LinearLayoutManager(this);
+        reviewRecyclerView.setLayoutManager(reviewLinearLayoutManager);
 
     }
 
@@ -111,6 +122,10 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             public Void loadInBackground() {
 
                 NetworkUtils.getTrailers();
+                NetworkUtils.getReviews();
+
+                Log.d("length",String.valueOf(reviews.size()));
+                Log.d("length",String.valueOf(reviewAdapter.getItemCount()));
 
                 return null;
             }
@@ -119,6 +134,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             protected void onStopLoading() {
                 super.onStopLoading();
                 trailerAdapter.notifyDataSetChanged();
+                reviewAdapter.notifyDataSetChanged();
             }
 
         };
@@ -127,6 +143,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Void> loader, Void data) {
         trailerAdapter.notifyDataSetChanged();
+        reviewAdapter.notifyDataSetChanged();
     }
 
     @Override

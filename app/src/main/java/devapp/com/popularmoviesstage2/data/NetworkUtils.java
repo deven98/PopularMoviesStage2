@@ -3,6 +3,7 @@ package devapp.com.popularmoviesstage2.data;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -132,6 +133,28 @@ public class NetworkUtils {
 
     }
 
+    public static void getReviews(){
+
+        DetailActivity.reviews.clear();;
+
+        ID_CHOSEN = MainActivity.movieId.get(DetailActivity.POSITION_CHOSEN);
+
+        String REVIEWS_BASE_URL = "http://api.themoviedb.org/3/movie/" + ID_CHOSEN + "/reviews?api_key=" + API_KEY;
+
+        Uri uri = Uri.parse(REVIEWS_BASE_URL).buildUpon().build();
+
+        String result = null;
+
+        try{
+            result = getResponseFromHttpUrl(new URL(uri.toString()));}
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        parseReviews(result);
+
+    }
+
     private static void parseTrailers(String result){
 
         try {
@@ -148,8 +171,24 @@ public class NetworkUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
+    private static void parseReviews(String result){
 
+        try {
+            JSONObject j = new JSONObject(result);
+
+            JSONArray trailers = j.getJSONArray("results");
+
+            for(int i = 0; i<trailers.length()-1; i++){
+
+                DetailActivity.reviews.add(trailers.getJSONObject(i).getString("content"));
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 

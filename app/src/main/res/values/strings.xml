@@ -7,4 +7,5 @@
     <string name="content_poster">Movie Poster</string>
     <string name="message_trailers">Trailers</string>
     <string name="adapter_trailer">Trailer </string>
+    <string name="message_reviews">Reviews</string>
 </resources>
